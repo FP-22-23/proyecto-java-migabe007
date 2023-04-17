@@ -11,30 +11,34 @@ public class Paciente implements Comparable<Paciente>{
 	private String iD;
 	private String patientName;
 	private Gender patientGender;
-	private LocalDate appointmentDate;
-	private Integer patientWeight;
-	private Integer patientHeight;
 	private Boolean isAllergic;
-	private List<String> prescribedMedicines;
 	//Tipo auxiliar
-	private Patient_statistics patient_statistics;
+	private MedidasPaciente medidasPaciente;
+	
+	private LocalDate appointmentDate;
+	private List<String> prescribedMedicines;
+	private Double temperature;
+	private Integer heartbeats;
+	
+	
 	
 	//C1
-	public Paciente(String iD, String patientName, Gender patientGender, LocalDate appointmentDate,
-	Integer patientWeight, Integer patientHeight, Boolean isAllergic,
-	List<String> prescribedMedicines, Patient_statistics patient_statistics) {
+	public Paciente(String iD, String patientName, Gender patientGender, Boolean isAllergic, 
+			MedidasPaciente medidasPaciente, LocalDate appointmentDate,
+			List<String> prescribedMedicines, Double temperature, Integer heartbeats) {
 		this.iD = iD;
 		this.patientName = patientName;
 		this.patientGender = patientGender;
-		this.appointmentDate = appointmentDate;
-		this.patientWeight = patientWeight;
-		this.patientHeight = patientHeight;
 		this.isAllergic = isAllergic;
+		this.medidasPaciente = medidasPaciente;
+		this.appointmentDate = appointmentDate;
 		this.prescribedMedicines = new LinkedList<String>();
-		this.patient_statistics = patient_statistics;
+		this.temperature = temperature;
+		this.heartbeats = heartbeats;
+		
+		
 		Checkers.check("El nombre del paciente no puede estar vacio", !patientName.equals(""));
-		Checkers.check("El peso del paciente no puede ser negativo ni nulo", patientWeight > 0);
-		Checkers.check("La altura del paciente no puede ser negativa ni nula", patientHeight > 0);
+		Checkers.check("El número de pulsaciones no puede ser negativo", heartbeats >= 0);
 		
 	}
 	
@@ -44,14 +48,28 @@ public class Paciente implements Comparable<Paciente>{
 	}
 	
 	//Propiedades derivadas
-	public Double patientIMC() {
-		Integer IMC = (patientWeight / (patientHeight*patientHeight));
-		return IMC.doubleValue();
-		
+	
+	public Boolean tieneFiebre() {
+		Boolean res = false;
+		if (temperature > 37.8) {
+			res = true;
+		}
+		return res;
+	}	
+	
+	public String pulsaciones() {
+		String res;
+		if (heartbeats <  60) {
+			res = "Tiene bradicardia";
+		} else if (heartbeats >= 60 && heartbeats <= 100){
+			res = "Tiene un numero de pulsaciones dentro de la media esperada";
+		} else {
+			res = "Tiene taquicardia";
+		}
+		return res;
 	}
 	
 	//Getters
-	
 	public String getiD() {
 		return iD;
 	}
@@ -68,14 +86,6 @@ public class Paciente implements Comparable<Paciente>{
 		return appointmentDate;
 	}
 
-	public Integer getPatientWeight() {
-		return patientWeight;
-	}
-
-	public Integer getPatientHeight() {
-		return patientHeight;
-	}
-
 	public Boolean getIsAllergic() {
 		return isAllergic;
 	}
@@ -83,12 +93,20 @@ public class Paciente implements Comparable<Paciente>{
 	public List<String> getPrescribedMedicines() {
 		return prescribedMedicines;
 	}
-	
-	public Patient_statistics getPatient_statistics() {
-		return patient_statistics;
 
+	public Double getTemperature() {
+		return temperature;
 	}
 
+	public Integer getHeartbeats() {
+		return heartbeats;
+	}
+
+	public MedidasPaciente getMedidasPaciente() {
+		return medidasPaciente;
+	}
+	
+	
 	//Setters
 	
 	public void setiD(String iD) {
@@ -108,16 +126,6 @@ public class Paciente implements Comparable<Paciente>{
 		this.appointmentDate = appointmentDate;
 	}
 
-	public void setPatientWeight(Integer patientWeight) {
-		Checkers.check("El peso del paciente no puede ser negativo ni nulo", patientWeight > 0);
-		this.patientWeight = patientWeight;
-	}
-
-	public void setPatientHeight(Integer patientHeight) {
-		Checkers.check("La altura del paciente no puede ser negativa ni nula", patientHeight > 0);
-		this.patientHeight = patientHeight;
-	}
-
 	public void setIsAllergic(Boolean isAllergic) {
 		this.isAllergic = isAllergic;
 	}
@@ -125,21 +133,30 @@ public class Paciente implements Comparable<Paciente>{
 	public void setPrescribedMedicines(List<String> prescribedMedicines) {
 		this.prescribedMedicines = prescribedMedicines;
 	}
-	
-	public void setPatient_statistics(Patient_statistics patient_statistics) {
-		this.patient_statistics = patient_statistics;
+
+	public void setTemperature(Double temperature) {
+		this.temperature = temperature;
 	}
-	
+
+	public void setHeartbeats(Integer heartbeats) {
+		Checkers.check("El número de pulsaciones no puede ser negativo", heartbeats >= 0);
+		this.heartbeats = heartbeats;
+	}
+
+	public void setMedidasPaciente(MedidasPaciente medidasPaciente) {
+		this.medidasPaciente = medidasPaciente;
+	}
+
 	
 	//Representación como cadena
-	
 	@Override
 	public String toString() {
 		return "Paciente [iD=" + iD + ", patientName=" + patientName + ", patientGender=" + patientGender
-				+ ", appointmentDate=" + appointmentDate + ", patientWeight=" + patientWeight + ", patientHeight="
-				+ patientHeight + ", isAllergic=" + isAllergic + ", prescribedMedicines=" + prescribedMedicines
-				+ ", patient_statistics=" + patient_statistics + "]";
+				+ ", isAllergic=" + isAllergic + ", medidasPaciente=" + medidasPaciente + ", appointmentDate="
+				+ appointmentDate + ", prescribedMedicines=" + prescribedMedicines + ", temperature=" + temperature
+				+ ", heartbeats=" + heartbeats + "]";
 	}
+	
 
 	//Criterio de igualdad
 	@Override
@@ -160,6 +177,7 @@ public class Paciente implements Comparable<Paciente>{
 		return Objects.equals(appointmentDate, other.appointmentDate) && Objects.equals(iD, other.iD)
 				&& Objects.equals(patientName, other.patientName);
 	}
+	
 	
 	//Orden natural
 	@Override
