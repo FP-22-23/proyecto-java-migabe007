@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -221,10 +223,28 @@ public class Pacientes {
 	}
 	
 	//8
-	
 	public Map<Gender, List<Integer>> pacienteMayorTemperaturaSegunGenero(Gender gender){
 		return null;
 	}
+	
+	
+	//9
+	public SortedMap<Gender, List<Paciente>> nPacientesMayorTemperaturaPorGenero(Integer n){
+		
+		return pacientes.stream()
+				.collect(Collectors.groupingBy(Paciente::getPatientGender,
+						TreeMap::new,
+						Collectors.collectingAndThen(Collectors.toList(),
+								lista-> nPacientesMayorTemperatura(n, lista))));
+	}
+	
+	private List<Paciente> nPacientesMayorTemperatura(Integer n, List<Paciente> lista){
+		return lista.stream()
+				.sorted(Comparator.comparing(Paciente::getTemperature))
+				.limit(n)
+				.collect(Collectors.toList());
+	}
+	
 	
 	//10
 	public Map<Month, Long> mesMayorNumeroPacientes(){

@@ -159,7 +159,7 @@ void delPaciente(Paciente s): borra el paciente que se pasa como parámetro.
 
 -
 
--
+- SortedMap<Gender, List<Paciente>> nPacientesMayorTemperaturaPorGenero(Integer n): devuelve un Map ordenado en el que las claves son el genero del paciente, y cuyos valores son las "n" mayores temperaturas.
 
 - Map<Month, Long> mesMayorNumeroPacientes(): dado un stream de pacientes, devuelve el mes en el que ha habido mayor número de pacientes.
 

@@ -28,11 +28,11 @@ public class TestFactoriaPacientes {
 		testNumPacientesPorGenero2();
 		testIMCPorPaciente();
 		
-		
+		testNPacientesMayorTemperaturaPorGenero(5);
 		testMesMayorNumeroPacientes();
 	}
 	
-
+	
 
 	private static void testCreacionPacientes() {
 		System.out.println("\nTEST de la creacion de pacientes");
@@ -169,6 +169,17 @@ public class TestFactoriaPacientes {
 		} catch (Exception e) {
 			System.out.println("Excepci�n capturada:\n   " + e);
 		}		
+	}
+	
+	
+	private static void testNPacientesMayorTemperaturaPorGenero(Integer n) {
+		System.out.println("\nTest de testNPacientesMayorTemperaturaPorGenero");
+		try {
+			System.out.println(PACIENTES.nPacientesMayorTemperaturaPorGenero(n));
+		} catch (Exception e) {
+			System.out.println("Excepci�n capturada:\n   " + e);
+		}
+		
 	}
 	
 
