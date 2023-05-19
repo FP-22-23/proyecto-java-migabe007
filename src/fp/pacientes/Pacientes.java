@@ -1,26 +1,38 @@
 package fp.pacientes;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Pacientes {
-	private SortedSet<Paciente> pacientes;
+	private List<Paciente> pacientes;
 	
+	//C1
 	public Pacientes() {
-		this.pacientes = new TreeSet<Paciente>();
+		this.pacientes = new LinkedList<Paciente>();
 	}
 	
+	//C2
 	public Pacientes(Collection<Paciente> pacientes) {
-		this.pacientes = new TreeSet<Paciente>(pacientes);
+		this.pacientes = new LinkedList<Paciente>(pacientes);
+	}
+	
+	//C3
+	public Pacientes(Stream<Paciente> pacientes) {
+		this.pacientes = pacientes.collect(Collectors.toList());
 	}
 
 	@Override
@@ -138,4 +150,89 @@ public class Pacientes {
 		}
 		return res;
 	}
+	
+	/*
+	 * Bloque I: Implementar, documentar y probar CINCO métodos que trabajen sobre el dataset y respondan a preguntas interesantes.
+	 *		A escoger uno de los dos siguientes: existe / para todo (el mismo implementado en la entrega 2, pero con streams).
+	 *		A escoger uno de los tres siguientes: contador/suma/media (el mismo implementado en la entrega 2, pero con streams).
+	 *		Una selección con filtrado (la misma implementada en la entrega 2, pero con streams).
+	 *		Un máximo/mínimo con filtrado.
+	 *		Una selección, con filtrado y ordenación.
+	 */
+	
+	
+	//1
+	public Boolean existePacienteFechaEspecifica2(LocalDate s) {
+		return pacientes.stream().anyMatch(x->x.getAppointmentDate().equals(s));
+	}
+	
+	//2
+	public Double mediaPesoPacientes2() {
+		return pacientes.stream().collect(Collectors.averagingDouble(x->x.getMedidasPaciente().patientWeight()));	
+	}
+	
+	//3
+	public List<Paciente> pacientesAlergicos2(){
+		return pacientes.stream().filter(x->x.getIsAllergic().equals(true)).toList();
+	}
+	
+	//4
+	public Integer maxNumPulsacionesPorGenero(Gender gender) {
+		Comparator<Paciente> cmp = Comparator.comparing(Paciente::getHeartbeats);
+		return pacientes.stream().filter(x->x.getPatientGender().equals(gender))
+				.max(cmp)
+				.map(Paciente::getHeartbeats)
+				.get();
+	}
+	
+	//5
+	public List<String> pacientesOrdenadosPorFechaSegunGenero(Gender genero) {
+		return pacientes.stream().filter(x -> x.getPatientGender().equals(genero))
+				.sorted(Comparator.comparing(Paciente::getAppointmentDate))
+				.map(Paciente::getPatientName)
+				.toList();
+	}
+	
+	/*
+	 * Bloque II: Implementar, documentar y probar CINCO métodos que trabajen sobre el dataset y respondan a preguntas interesantes.
+	 * 		Uno de los métodos (4) o (5) implementados en la entrega 2, pero con streams.
+	 * 		Un método en cuya implementación se use, o bien el Collector collectingAndThen, o bien el Collector mapping.
+	 * 		Un método que devuelva un Map en el que las claves sean un atributo o una función sobre un atributo, y los valores son máximos/mínimos de los elementos que tienen ese valor.
+	 * 		Un método que devuelva un SortedMap en el que las claves sean un atributo o una función sobre un atributo, y los valores sean listas con los n mejores o peores elementos que comparten el valor de ese atributo (o función sobre el atributo).
+	 * 		Un método que calcule un Map y devuelva la clave con el valor asociado (mayor o menor) de todo el Map.
+	 */
+	
+	//6
+	public Map<Gender, Long> numPacientesPorGenero2(){
+		return pacientes.stream().collect(Collectors.groupingBy(Paciente::getPatientGender, Collectors.counting()));
+	}
+	
+	//7
+	
+	public Map<String, List<Double>> IMCPorPaciente(){
+		/*
+		 * return pacientes.stream().collect(Collectors.groupingBy(Paciente::getPatientName, 
+		 * Collectors.collectingAndThen(Collectors.minBy(
+		 * Comparator.comparing(x->x.getMedidasPaciente().patientIMC())), optional->optional.get())));
+		 */
+		
+		return pacientes.stream().collect(Collectors.groupingBy(Paciente::getPatientName,
+				Collectors.mapping(x->x.getMedidasPaciente().patientIMC(), Collectors.toList())));
+	}
+	
+	//8
+	
+	public Map<Gender, List<Integer>> pacienteMayorTemperaturaSegunGenero(Gender gender){
+		return null;
+	}
+	
+	//10
+	public Map<Month, Long> mesMayorNumeroPacientes(){
+		Map<Month, Long> mp = pacientes.stream().collect(Collectors.groupingBy(x->x.getAppointmentDate().getMonth(), Collectors.counting()));
+		Entry<Month, Long> res = Collections.max(mp.entrySet(), Map.Entry.comparingByValue());
+		return Collections.singletonMap(res.getKey(), res.getValue());
+ 	}
+	
+	
+	
 }

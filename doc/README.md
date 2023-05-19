@@ -92,7 +92,11 @@ Tiene operaciones propias como 'Double patientIMC()'.
 
 Clase de factor�a para construir objetos de tipo Pacientes.
 
-- Pacientes leerPaciente(String rutaFichero): Crea un objeto de tipo Pacientes a partir de la informaci�n recogida en el archivo csv, cuya ruta se da como par�metro. 
+- Pacientes leerPaciente(String rutaFichero): Crea un objeto de tipo Pacientes a partir de la informaci�n recogida en el archivo csv, cuya ruta se da como par�metro. Usa el constructor del tipo Pacientes que toma como parámetr una Collection de tipo Paciente. 
+
+- Pacientes leerPaciente2(String rutaFichero): Crea un objeto de tipo Pacientes a partir de la informaci�n recogida en el archivo csv, cuya ruta se da como par�metro. Usa el constructor del tipo Pacientes que toma como parámetr un Stream de tipo Paciente. 
+
+- Paciente parsearPaciente(String linea): método privado a través del cual se hace la transformación de datos del csv a los distintos tipos de la clase.
 
 
 ### Tipo Contenedor
@@ -107,8 +111,8 @@ Clase contenedora de los objetos de tipo Paciente.
 **Constructores**: 
 
 - C1: Pacientes(). Constructor por defecto. Crea un objeto de tipo Pacientes sin ningún paciente almacenado.
-- C2: Pacientes(Collection<Paciente> pacientes). Constructor con un par�metro de tipo Collection<Paciente>. Crea un objeto de tipo Pacientes con las pacientess incluidos en la colecci�n dada como par�metro.
-- ...
+- C2: Pacientes(Collection<Paciente> pacientes). Constructor con un par�metro de tipo Collection<Paciente>. Crea un objeto de tipo Pacientes con los pacientes incluidos en la colecci�n dada como par�metro.
+- C3: Pacientes(Stream<Paciente> pacientes). Constructor con un parámetro de tipo Stream<Paciente>. Crea una lista de pacientes con los pacientes incluidos en el Stream dado como parámetro.
 
 **Criterio de igualdad**: Dos pacientes son iguales si lo son su propiedad pacientes.
 
@@ -136,4 +140,32 @@ void delPaciente(Paciente s): borra el paciente que se pasa como parámetro.
 - Map<LocalDate, Set<String>> pacientesPorFecha(): devuelve un Map que tiene como clave una fecha, y como el conjunto de pacientes que han tenido cita con el médico en esa fecha.
 
 - Map<Gender, Integer> numPacientesPorGenero(): devuelve un Map que cuenta el número de pacientes de cada género.
+
+*******************************************************************************************************************
+
+- Boolean existePacienteFechaEspecifica2(LocalDate s): hace lo mismo que el método public Boolean existePacienteFechaEspecifica(LocalDate s), pero este se implementa con streams.
+
+- Double mediaPesoPacientes2(): hace lo mismo que el método Double mediaPesoPacientes(), pero este se implementa con streams.
+
+- List<Paciente> pacientesAlergicos2(): hace lo mismo que el método List<Paciente> pacientesAlergicos(), pero este se implementa con streams.
+
+- Integer maxNumPulsacionesPorGenero(Gender gender): devuelve el mayor número de pulsaciones según el género que se pasa como parámetro.
+
+- List<String> pacientesOrdenadosPorFechaSegunGenero(Gender genero): devuelve una lista de pacientes ordenados por fecha, con el género pasado como parámetro.
+
+- Map<Gender, Long> numPacientesPorGenero2(): hace lo mismo que el método Map<Gender, Long> numPacientesPorGenero(), pero este se construye mediante streams.
+
+- Map<String, List<Double>> IMCPorPaciente(): a partir de un stream de Pacientes, devuelve un Map en el que las claves son el nombre de cada paciente, y los valores, una lista de IMC asociada a dicho nombre.
+
+-
+
+-
+
+- Map<Month, Long> mesMayorNumeroPacientes(): dado un stream de pacientes, devuelve el mes en el que ha habido mayor número de pacientes.
+
+
+
+
+
+
  
